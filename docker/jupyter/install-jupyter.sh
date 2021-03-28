@@ -26,10 +26,11 @@ apk add py3-pandas-1.0.3-r0.apk && rm py3-pandas-1.0.3-r0.apk
 # Dependencies for jupyterhub
 apk add py3-cryptography py3-ruamel.yaml.clib py3-requests
 # Install mysqlclient so that user can use Python to import data into MySQL.
+apk add --virtual build-deps gcc python3-dev musl-dev
 apk add --no-cache mariadb-connector-c-dev
 apk add --no-cache --virtual .build-deps build-base mariadb-dev
 pip install mysqlclient
-apk del .build-deps
+apk del build-deps
 
 pip -q install \
     jupyterhub==1.1.0 \
@@ -51,6 +52,6 @@ NOTEBOOK_DIR=$(python3 -c "print(__import__('notebook').__path__[0])")
 CODE_MIRROR_MODE_PATH=$NOTEBOOK_DIR/static/components/codemirror/mode
 mkdir -p "$HOME"/.jupyter/custom/
 mkdir -p "$CODE_MIRROR_MODE_PATH"/sqlflow
-# Depends on Docekrfile to COPY *.js to /js.
+# Depends on Dockerfile to COPY *.js to /js.
 cp /jupyter/js/custom.js "$HOME"/.jupyter/custom/
 cp /jupyter/js/sqlflow.js "$CODE_MIRROR_MODE_PATH"/sqlflow/

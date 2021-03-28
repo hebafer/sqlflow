@@ -47,6 +47,7 @@ ADD build/sqlflow_models-0.1.0-py3-none-any.whl /
 RUN bash -c 'pip install --no-cache-dir --prefix=/install \
     /sqlflow_models-0.1.0-py3-none-any.whl \
     six==1.15.0 \
+    tensorflow==2.0.1 \
     mysqlclient==1.4.4 \
     impyla==0.16.0 \
     pyodps==0.8.3 \

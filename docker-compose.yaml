@@ -1,0 +1,21 @@
+version: "3.8"
+   
+services:
+  sqlflow-mysql:
+    network_mode: host
+    image: sqlflow/sqlflow:mysql
+  sqlflow-server:
+    network_mode: host
+    image: sqlflow:server
+    depends_on:
+      - sqlflow-mysql
+  sqlflow-step:
+    network_mode: host
+    image: sqlflow:step
+    environment:
+      - SQLFLOW_DATASOURCE="mysql://root:root@tcp(localhost:3306)/?maxAllowedPacket=0"
+      - SQLFLOW_PARSER_SERVER_LOADING_PATH="/usr/local/sqlflow/java"
+      - SQLFLOW_PARSER_SERVER_PORT=12300
+    depends_on:
+      - sqlflow-mysql
+    command: sleep 3000

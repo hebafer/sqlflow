@@ -28,3 +28,4 @@ mysql-inited
 .project
 .settings/
 .factorypath
+venv/

@@ -34,9 +34,10 @@ ENV SQLFLOW_PARSER_SERVER_LOADING_PATH="/usr/local/sqlflow/java"
 RUN python3 -m pip install --quiet /build/couler*.whl /build/fluid*.whl && \
         mv /build/sqlflowserver /build/sqlflow /build/step /usr/local/bin/ && \
         mkdir -p $SQLFLOW_PARSER_SERVER_LOADING_PATH && \
-        mv /build/*.jar $SQLFLOW_PARSER_SERVER_LOADING_PATH && \
-        apk del --purge py3-pip && \
-        rm -rf /build
+        mv /build/*.jar $SQLFLOW_PARSER_SERVER_LOADING_PATH
+#        mv /build/*.jar $SQLFLOW_PARSER_SERVER_LOADING_PATH && \
+#        apk del --purge py3-pip && \
+#        rm -rf /build
 
 # Install kubectl for submitting argo workflow
 COPY scripts/travis/export_k8s_vars.sh /usr/local/bin/

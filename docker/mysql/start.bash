@@ -67,7 +67,7 @@ for f in /datasets/*; do
 done
 echo "Done."
 
-# If we run the contaienr with -v host_dir:/work, then the following
+# If we run the container with -v host_dir:/work, then the following
 # command would create host_dir/mysql-inited file.  A bash script (on
 # the host or a container) would be able to wait the creation of this
 # file using the trick https://unix.stackexchange.com/a/185370/325629.
