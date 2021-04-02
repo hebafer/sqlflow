@@ -29,3 +29,4 @@ mysql-inited
 .settings/
 .factorypath
 venv/
+*.out
