@@ -20,24 +20,14 @@ set -ex
 # Install pandas pre-compiled apk, we do not want to build
 # this python package locally because it relies on gcc and
 # other build tools, which make the image very large
-wget -q http://cdn.sqlflow.tech/alpine/py3-pandas-1.0.3-r0.apk
-wget -q -P /etc/apk/keys/ http://cdn.sqlflow.tech/alpine/sqlflow-5ef80180.rsa.pub
-apk add py3-pandas-1.0.3-r0.apk && rm py3-pandas-1.0.3-r0.apk
-# Dependencies for jupyterhub
-apk add py3-cryptography py3-ruamel.yaml.clib py3-requests
-# Install mysqlclient so that user can use Python to import data into MySQL.
-apk add --virtual build-deps gcc python3-dev musl-dev
-apk add --no-cache mariadb-connector-c-dev
-apk add --no-cache --virtual .build-deps build-base mariadb-dev
-pip install wheel mysqlclient
-#apk del build-deps
+#wget -q -P /etc/apt/keys/ http://cdn.sqlflow.tech/alpine/sqlflow-5ef80180.rsa.pub
 
 pip -q install \
+    wheel \
+    mysqlclient \
     jupyterhub==1.2.0 \
     notebook==6.3.0 \
     sqlflow==0.15.0
-
-pip -V
 
 # Load SQLFlow's Jupyter magic command
 # automatically. c.f. https://stackoverflow.com/a/32683001.

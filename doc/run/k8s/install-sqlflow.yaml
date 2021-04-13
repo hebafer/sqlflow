@@ -65,7 +65,7 @@ spec:
       initialDelaySeconds: 5
       periodSeconds: 5
   - name: model-zoo
-    image: sqlflow/sqlflow:model_zoo
+    image: hebafer/sqlflow-model_zoo:latest
     imagePullPolicy: IfNotPresent
     ports:
     - containerPort: 50055
@@ -92,5 +92,4 @@ spec:
   - name: docker-socket-volume
     hostPath:
       path: /var/run/docker.sock
-      type: File
 

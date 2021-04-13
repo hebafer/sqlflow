@@ -30,4 +30,3 @@ mysql-inited
 .factorypath
 venv/
 *.out
-*.sh

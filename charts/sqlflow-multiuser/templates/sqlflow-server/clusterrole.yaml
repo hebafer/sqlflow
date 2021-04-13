@@ -1,0 +1,57 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sqlflow-server
+rules:
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - sqlflow-server
+    resources:
+      - sqlflow-server
+    verbs:
+      - use
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+      - events
+      - workflows
+    verbs:
+      - get
+      - watch
+      - list
+      - create
+      - delete
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: default
+rules:
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - sqlflow-server
+    resources:
+      - sqlflow-server
+    verbs:
+      - use
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+      - events
+      - workflows
+    verbs:
+      - get
+      - watch
+      - list
+      - create
+      - delete
+
+
+

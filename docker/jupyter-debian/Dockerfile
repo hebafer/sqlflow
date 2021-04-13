@@ -1,25 +1,21 @@
 # This Dockerfile containers Jupyter Notebook server with many
 # SQLFlow tutorials and SQLFlow magic command.
 
-FROM alpine:3.13
+FROM python:3.8-buster
 
 #ARG FIND_FASTED_MIRROR=true
-
-RUN apk add --no-cache python3 python3-dev py3-pip py3-pyzmq py3-grpcio libffi-dev
+RUN apt-get update && apt-get install -y wget mariadb-client libmariadb-dev
 
 # Install IPythono Notebook tutorials
-COPY /docker/jupyter/js /jupyter/js/
+COPY /docker/jupyter-debian/js /jupyter/js/
 COPY build/tutorial /workspace
 # Remove non-interactive tutorials
 RUN rm /workspace/energe_lstmbasedtimeseries.ipynb \
-    /workspace/cora-gcn.ipynb \
-    /workspace/imdb-stackedbilstm.ipynb
-COPY docker/jupyter/install-jupyter.sh /jupyter/install-jupyter.sh
-RUN /bin/sh /jupyter/install-jupyter.sh
+     /workspace/cora-gcn.ipynb \
+     /workspace/imdb-stackedbilstm.ipynb
 
-# Error executing here, move to install-jupyter.sh
-# Cleanup
-#RUN apk del --purge python3-dev
+COPY docker/jupyter-debian/install-jupyter.sh /jupyter/install-jupyter.sh
+RUN ./jupyter/install-jupyter.sh
 
 # The following SQLFlow gRPC server endpoint implies the server runs in a container,
 # and if container has the option --net=container:sqlflow_server_container, SQLFlow magic
