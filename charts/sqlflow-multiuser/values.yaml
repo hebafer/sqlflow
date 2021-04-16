@@ -45,29 +45,27 @@ sqlflowserver:
   # sidecarContainers - add more containers to SQLFlow server
   # Key/Value where Key is the sidecar `- name: <Key>`
   # Example:
-  #   sidecarContainers:
-  #      webserver:
-  #        image: nginx
-  sidecarContainers:
-  - name: modelzoo
-    image: hebafer/sqlflow-model_zoo:latest
-    imagePullPolicy: IfNotPresent
-    ports:
-    - containerPort: 50055
-      protocol: TCP
-    env:
-    - name: MYSQL_ADDR
-      value: ${MY_POD_IP}:3306
-    command: [ "/bin/bash", "-c" ]
-    args:
-    - |
-      while ! nc -z -w 1 ${MYSQL_ADDR/:/ }; do
-        sleep 3
-        echo "Waiting for mysql..."
-      done 
-      echo "Starting SQLFlow Model Zoo server ..."
-      modelzooserver --mysql-addr="mysql://root:root@tcp(${MYSQL_ADDR})/"
-
+  # sidecarContainers:
+  #   - name: modelzoo
+  #       image: hebafer/sqlflow-model_zoo:latest
+  #       imagePullPolicy: IfNotPresent
+  #       ports:
+  #       - containerPort: 50055
+  #         protocol: TCP
+  #       env:
+  #       - name: MYSQL_ADDR
+  #         value: ${MY_POD_IP}:3306
+  #      command: [ "/bin/bash", "-c" ]
+  #       args:
+  #       - |
+  #        while ! nc -z -w 1 ${MYSQL_ADDR/:/ }; do
+  #           sleep 3
+  #           echo "Waiting for mysql..."
+  #         done 
+  #         echo "Starting SQLFlow Model Zoo server ..."
+  #         modelzooserver --mysql-addr="mysql://root:root@tcp(${MYSQL_ADDR})/"
+  sidecarContainers: {}
+ 
   ## SQLFlow server container image
   ##
   image:
@@ -172,7 +170,7 @@ sqlflowserver:
   ingress:
     ## If true, SQLFlow server Ingress will be created
     ##
-    enabled: false
+    enabled: true
 
     ## SQLFlow server Ingress annotations
     ##
@@ -188,12 +186,12 @@ sqlflowserver:
     ## Must be provided if Ingress is enabled
     ##
     hosts:
-      - host: sqlflowserver.local
+      - host: sqlflow-server.local
         paths:
         - path: /
           backend:
-            serviceName: sqlflowserver.local
-            servicePort: 80
+            serviceName: sqlflow-server
+            servicePort: 50051
 
 
     ## SQLFlow server Ingress TLS configuration
@@ -471,7 +469,7 @@ jupyterhub:
   ##       key: username
   env:
     - name: SQLFLOW_MYSQL_IMAGE
-      value: sqlflow/sqlflow:mysql
+      value: hebafer/sqlflow-mysql:1.0.0
     - name: SQLFLOW_JUPYTER_IMAGE
       value: hebafer/sqlflow-jupyter-debian:1.0.0
     - name: SQLFLOW_JUPYTER_SSL_KEY

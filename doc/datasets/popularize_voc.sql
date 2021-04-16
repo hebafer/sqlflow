@@ -216,7 +216,7 @@ INSERT INTO voc.annotations(image_id, filename, path, annotation, db, image, wid
 DROP TABLE IF EXISTS voc.objects;
 CREATE TABLE voc.objects
 (
-  object_id  INTEGER     NOT NULL PRIMARY KEY
+  object_id  INTEGER     NOT NULL
   ,image_id  INTEGER     NOT NULL
   ,name      VARCHAR(11) NOT NULL
   ,pose      VARCHAR(11) NOT NULL
@@ -226,6 +226,7 @@ CREATE TABLE voc.objects
   ,ymin      INTEGER     NOT NULL
   ,xmax      INTEGER     NOT NULL
   ,ymax      INTEGER     NOT NULL
+  ,PRIMARY KEY (object_id, image_id)
 );
 INSERT INTO voc.objects(image_id, object_id, name, pose, truncated, difficult, xmin, ymin, xmax, ymax)VALUES (1,1,'person','Unspecified','Unspecified',0,117,63,409,316);
 INSERT INTO voc.objects(image_id, object_id, name, pose, truncated, difficult, xmin, ymin, xmax, ymax)VALUES (2,1,'person','Unspecified','Unspecified',0,142,43,270,248);
