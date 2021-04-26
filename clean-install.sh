@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Start minikube
+minikube start
 # Verify Minikube ingress is enabled
 minikube addons enable ingress
 
