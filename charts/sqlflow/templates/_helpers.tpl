@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "sqlflow.name" -}}
-{{- default .Chart.Name | trunc 63 | trimSuffix "-" }}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -11,10 +11,10 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "sqlflow.fullname" -}}
-{{- if .Values.sqlflowserver.fullnameOverride }}
-{{- .Values.sqlflowserver.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.sqlflowserver.nameOverride }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -54,29 +54,9 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Create the name of the service account to use
 */}}
 {{- define "sqlflow.serviceAccountName" -}}
-{{- if .Values.serviceAccounts.default.create }}
-{{- default .Values.serviceAccounts.default.name }}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "sqlflow.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "default" .Values.serviceAccounts.default.name }}
-{{- end }}
-{{- end }}
-{{/*
-Create a service account to be used by the SQLFlow Server
-*/}}
-{{- define "sqlflowserver.serviceAccountName" -}}
-{{- if .Values.serviceAccounts.sqlflowserver.create }}
-{{- default .Values.serviceAccounts.sqlflowserver.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccounts.sqlflowserver.name }}
-{{- end }}
-{{- end }}
-{{/*
-Create a service account to be used by the SQLFlow Jupyterhub
-*/}}
-{{- define "jupyterhub.serviceAccountName" -}}
-{{- if .Values.serviceAccounts.jupyterhub.create }}
-{{- default .Values.serviceAccounts.jupyterhub.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccounts.jupyterhub.name }}
+{{- default "sqlflow" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}

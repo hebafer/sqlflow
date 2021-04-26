@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sqlflow.fullname" . }}
+  labels:
+    {{- include "sqlflow.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "sqlflow.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sqlflow.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sqlflow.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+      - name: docker-socket-volume
+        hostPath:
+          path: /var/run/docker.sock
+      containers:
+      - name: server
+        image: sqlflow/sqlflow:server
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: SQLFLOW_WORKFLOW_LOGVIEW_ENDPOINT
+          value: "http://localhost:9001"
+        - name: SQLFLOW_WORKFLOW_STEP_IMAGE
+          value: sqlflow/sqlflow:step
+        ports:
+        - name: server
+          containerPort: 50051
+        command:
+          - sqlflowserver
+          - --argo-mode
+      - name: notebook
+        image: hebafer/sqlflow-jupyter-debian:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: notebook
+          containerPort: 8888
+        command:
+        - sh
+        - -c
+        - 'export SQLFLOW_DATASOURCE=mysql://root:root@tcp\(${MY_POD_IP}:3306\)/?maxAllowedPacket=0 && jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root --NotebookApp.token=""'
+        env:
+        # Tell the Jupyter Notebook magic command the SQLFlow gRPC server address.
+        - name: SQLFLOW_SERVER
+          value: "localhost:50051"
+        # When Kubernetes starts a container, it fills in environment variables 
+        # before it runs the command.  Here Kubernetes fills in MY_POD_IP with the
+        # IP address of the pod, which contains the MySQL server container.  The
+        # above command use MY_POD_IP to construct SQLFLOW_DATASOURCE, which, will
+        # be retrieved by the Jupyter Notebook magic command and be sent to the
+        # SQLFlow gRPC server in each request.  The SQLFlow server compiles the value
+        # into each step container, so these steps knows the MySQL server IP.
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+      - name: mysql
+        image: hebafer/sqlflow-mysql:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+          protocol: TCP
+        env:
+        - name: MYSQL_HOST
+          value: "0.0.0.0"
+        - name: MYSQL_PORT
+          value: "3306"
+        readinessProbe:
+          exec:
+            # The entrypoing script of sqlflow/sqlflow:mysql populates datasets into the
+            # MySQL server and then touch a file /work/mysql-initd to indicate the
+            # completion of population.  Only if the file is created, the cat command
+            # exits with 0, and indicates the readiness of the MySQL server.
+            command:
+            - cat
+            - /work/mysql-inited
+          initialDelaySeconds: 60
+          periodSeconds: 5
+      - name: model-zoo
+        image: hebafer/sqlflow-model_zoo:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 50055
+          protocol: TCP
+        env:
+        - name: MYSQL_ADDR
+          value: 127.0.0.1:3306
+        volumeMounts:
+        # bind to host's docker.sock to build image
+        - mountPath: /var/run/docker.sock
+          name: docker-socket-volume
+        securityContext:
+          privileged: true
+        command: [ "/bin/bash", "-c" ]
+        args:
+        - |
+          while ! nc -z -w 1 ${MYSQL_ADDR/:/ }; do
+            sleep 3
+            echo "Waiting for mysql..."
+          done 
+          echo "Starting SQLFlow Model Zoo server ..."
+          modelzooserver --mysql-addr="mysql://root:root@tcp(${MYSQL_ADDR})/"
+    {{- with .Values.nodeSelector }}
+    nodeSelector:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+    affinity:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 8 }}
+    {{- end }}
