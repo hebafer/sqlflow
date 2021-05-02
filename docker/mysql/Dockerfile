@@ -34,6 +34,7 @@ COPY doc/datasets/popularize_churn.sql \
      doc/datasets/popularize_cora.sql \
      doc/datasets/popularize_give_me_some_credit.sql \
      doc/datasets/popularize_voc.sql \
+     doc/datasets/popularize_coco.sql \
      /datasets/
 
 ARG FIND_FASTED_MIRROR=true

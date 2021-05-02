@@ -33,7 +33,7 @@ spec:
           path: /var/run/docker.sock
       containers:
       - name: server
-        image: sqlflow/sqlflow:server
+        image: hebafer/sqlflow-server:latest
         imagePullPolicy: IfNotPresent
         env:
         - name: SQLFLOW_WORKFLOW_LOGVIEW_ENDPOINT
@@ -91,7 +91,7 @@ spec:
             command:
             - cat
             - /work/mysql-inited
-          initialDelaySeconds: 60
+          initialDelaySeconds: 45
           periodSeconds: 5
       - name: model-zoo
         image: hebafer/sqlflow-model_zoo:latest

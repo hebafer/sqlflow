@@ -14,8 +14,8 @@ fuser -k 9001/tcp && fuser -k 8000/tcp
 
 # Install Argo
 kubectl create namespace argo
-kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=default:default
-kubectl create rolebinding sqlflow-server --clusterrole=admin --serviceaccount=default:sqlflow-server --namespace=default
+kubectl create rolebinding default --clusterrole=admin --serviceaccount=default:default
+kubectl create rolebinding sqlflow --clusterrole=admin --serviceaccount=default:sqlflow --namespace=default
 kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo/v2.12.11/manifests/install.yaml
 
 # Expose Argo workflow
@@ -28,9 +28,9 @@ nohup kubectl -n argo port-forward deployment/argo-server 9001:2746 --address=0.
 
 # Install chart
 kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
-helm uninstall sqlflow-multiuser
-helm install sqlflow-multiuser charts/sqlflow-multiuser/
+helm uninstall sqlflow
+helm install sqlflow charts/sqlflow/
 
 # Port Forward sqlflow-jupyterhub and sqlflow-server
 #nohup kubectl port-forward deployment/sqlflow-jupyterhub 8000:8000 --address=0.0.0.0 &
-nohup kubectl port-forward deployment/sqlflow-server 50051:50051 --address=0.0.0.0 &
+#nohup kubectl port-forward deployment/sqlflow-server 50051:50051 --address=0.0.0.0 &
