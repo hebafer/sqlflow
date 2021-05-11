@@ -40,6 +40,10 @@ spec:
           value: "http://localhost:9001"
         - name: SQLFLOW_WORKFLOW_STEP_IMAGE
           value: sqlflow/sqlflow:step
+        - name: MY_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         ports:
         - name: server
           containerPort: 50051
@@ -72,7 +76,7 @@ spec:
             fieldRef:
               fieldPath: status.podIP
       - name: mysql
-        image: hebafer/sqlflow-mysql:1.0.0
+        image: hebafer/sqlflow-mysql:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3306
@@ -93,30 +97,6 @@ spec:
             - /work/mysql-inited
           initialDelaySeconds: 45
           periodSeconds: 5
-      - name: model-zoo
-        image: hebafer/sqlflow-model_zoo:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 50055
-          protocol: TCP
-        env:
-        - name: MYSQL_ADDR
-          value: 127.0.0.1:3306
-        volumeMounts:
-        # bind to host's docker.sock to build image
-        - mountPath: /var/run/docker.sock
-          name: docker-socket-volume
-        securityContext:
-          privileged: true
-        command: [ "/bin/bash", "-c" ]
-        args:
-        - |
-          while ! nc -z -w 1 ${MYSQL_ADDR/:/ }; do
-            sleep 3
-            echo "Waiting for mysql..."
-          done 
-          echo "Starting SQLFlow Model Zoo server ..."
-          modelzooserver --mysql-addr="mysql://root:root@tcp(${MYSQL_ADDR})/"
     {{- with .Values.nodeSelector }}
     nodeSelector:
       {{- toYaml . | nindent 8 }}

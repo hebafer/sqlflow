@@ -469,7 +469,7 @@ jupyterhub:
   ##       key: username
   env:
     - name: SQLFLOW_MYSQL_IMAGE
-      value: hebafer/sqlflow-mysql:1.0.0
+      value: hebafer/sqlflow-mysql:latest
     - name: SQLFLOW_JUPYTER_IMAGE
       value: hebafer/sqlflow-jupyter-debian:1.0.0
     - name: SQLFLOW_JUPYTER_SSL_KEY

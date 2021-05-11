@@ -32,5 +32,5 @@ helm uninstall sqlflow
 helm install sqlflow charts/sqlflow/
 
 # Port Forward sqlflow-jupyterhub and sqlflow-server
-#nohup kubectl port-forward deployment/sqlflow-jupyterhub 8000:8000 --address=0.0.0.0 &
-#nohup kubectl port-forward deployment/sqlflow-server 50051:50051 --address=0.0.0.0 &
+#nohup kubectl port-forward deployment/sqlflow 8000:8000 --address=0.0.0.0 &
+#nohup kubectl port-forward deployment/sqlflow 50051:50051 --address=0.0.0.0 &
