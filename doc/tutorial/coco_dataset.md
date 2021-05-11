@@ -15,7 +15,7 @@ where table_schema = 'coco';
     SQLFlow Step: [1/1] Execute Code: bash -c step -e "SELECT Table_name as TablesName 
     from information_schema.tables 
     where table_schema = 'coco';" 
-    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-pk6kl?tab=workflow&nodeId=sqlflow-pk6kl-2455528812&sidePanel=logs:sqlflow-pk6kl-2455528812:main
+    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-hbmpm?tab=workflow&nodeId=sqlflow-hbmpm-3946709172&sidePanel=logs:sqlflow-hbmpm-3946709172:main
     SQLFlow Step: [1/1] Status: Pending
     SQLFlow Step: [1/1] Status: Running
     SQLFlow Step: [1/1] Status: Succeeded
@@ -62,10 +62,6 @@ where table_schema = 'coco';
       <th>3</th>
       <td>licenses</td>
     </tr>
-    <tr>
-      <th>4</th>
-      <td>result</td>
-    </tr>
   </tbody>
 </table>
 </div>
@@ -83,9 +79,8 @@ FROM coco.info;
 
     SQLFlow Step: [1/1] Execute Code: bash -c step -e "SELECT *
     FROM coco.info;" 
-    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-qkmlq?tab=workflow&nodeId=sqlflow-qkmlq-3864773878&sidePanel=logs:sqlflow-qkmlq-3864773878:main
+    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-xzqnf?tab=workflow&nodeId=sqlflow-xzqnf-2830840593&sidePanel=logs:sqlflow-xzqnf-2830840593:main
     SQLFlow Step: [1/1] Status: Pending
-    SQLFlow Step: [1/1] Status: Running
     SQLFlow Step: [1/1] Status: Succeeded
 
 
@@ -147,8 +142,9 @@ LIMIT 10;
     SQLFlow Step: [1/1] Execute Code: bash -c step -e "SELECT *
     FROM coco.images
     LIMIT 10;" 
-    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-rsdpg?tab=workflow&nodeId=sqlflow-rsdpg-3107484314&sidePanel=logs:sqlflow-rsdpg-3107484314:main
+    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-nxq9r?tab=workflow&nodeId=sqlflow-nxq9r-3461625552&sidePanel=logs:sqlflow-nxq9r-3461625552:main
     SQLFlow Step: [1/1] Status: Pending
+    SQLFlow Step: [1/1] Status: Running
     SQLFlow Step: [1/1] Status: Succeeded
 
 
@@ -173,7 +169,7 @@ LIMIT 10;
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>id</th>
+      <th>image_id</th>
       <th>file_name</th>
       <th>coco_url</th>
       <th>date_captured</th>
@@ -297,7 +293,7 @@ Select the subset of Images to infer:
 ```python
 %%sqlflow
 SELECT * FROM coco.`images`
-ORDER BY `images`.`id`  DESC
+ORDER BY `images`.`image_id`  DESC
 LIMIT 100;
 ```
 
@@ -465,7 +461,7 @@ SQLFlow statement to call:
 %%sqlflow
 DROP TABLE IF EXISTS coco.result;
 SELECT * FROM coco.`images`
-ORDER BY `images`.`id`  ASC
+ORDER BY `images`.`image_id`  ASC
 LIMIT 10
 TO RUN hebafer/yolov3-sqlflow:latest
 CMD "yolov3_detect_variant.py",
@@ -478,13 +474,13 @@ INTO result;
 ```
 
     SQLFlow Step: [1/2] Execute Code: bash -c step -e "DROP TABLE IF EXISTS coco.result;" 
-    SQLFlow Step: [1/2] Log: http://localhost:9001/workflows/default/sqlflow-htpsj?tab=workflow&nodeId=sqlflow-htpsj-3942345165&sidePanel=logs:sqlflow-htpsj-3942345165:main
+    SQLFlow Step: [1/2] Log: http://localhost:9001/workflows/default/sqlflow-hqxkb?tab=workflow&nodeId=sqlflow-hqxkb-3281317886&sidePanel=logs:sqlflow-hqxkb-3281317886:main
     SQLFlow Step: [1/2] Status: Pending
     SQLFlow Step: [1/2] Status: Running
     SQLFlow Step: [1/2] Status: Succeeded
     SQLFlow Step: [2/2] Execute Code: bash -c step -e "
     SELECT * FROM coco.\`images\`
-    ORDER BY \`images\`.\`id\`  ASC
+    ORDER BY \`images\`.\`image_id\`  ASC
     LIMIT 10
     TO RUN hebafer/yolov3-sqlflow:latest
     CMD \"yolov3_detect_variant.py\",
@@ -495,8 +491,7 @@ INTO result;
         \"--tasks=1,2,3,4,5\"
     INTO result;
     " 
-    SQLFlow Step: [2/2] Log: http://localhost:9001/workflows/default/sqlflow-htpsj?tab=workflow&nodeId=sqlflow-htpsj-480452024&sidePanel=logs:sqlflow-htpsj-480452024:main
-    SQLFlow Step: [2/2] Status: Pending
+    SQLFlow Step: [2/2] Log: http://localhost:9001/workflows/default/sqlflow-hqxkb?tab=workflow&nodeId=sqlflow-hqxkb-3242070227&sidePanel=logs:sqlflow-hqxkb-3242070227:main
     SQLFlow Step: [2/2] Status: Running
     SQLFlow Step: [2/2] Status: Succeeded
 
@@ -510,7 +505,7 @@ DESCRIBE coco.result;
 ```
 
     SQLFlow Step: [1/1] Execute Code: bash -c step -e "DESCRIBE coco.result;" 
-    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-9hnj5?tab=workflow&nodeId=sqlflow-9hnj5-3591330914&sidePanel=logs:sqlflow-9hnj5-3591330914:main
+    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-9pjl4?tab=workflow&nodeId=sqlflow-9pjl4-2248233901&sidePanel=logs:sqlflow-9pjl4-2248233901:main
     SQLFlow Step: [1/1] Status: Pending
     SQLFlow Step: [1/1] Status: Running
     SQLFlow Step: [1/1] Status: Succeeded
@@ -549,7 +544,7 @@ DESCRIBE coco.result;
     <tr>
       <th>0</th>
       <td>image_id</td>
-      <td>double</td>
+      <td>text</td>
       <td>YES</td>
       <td></td>
       <td>None</td>
@@ -661,7 +656,7 @@ FROM coco.result;
 
     SQLFlow Step: [1/1] Execute Code: bash -c step -e "SELECT image_id, person, bicycle, car, motorcycle, airplane, bus, train, truck, boat
     FROM coco.result;" 
-    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-sc5tv?tab=workflow&nodeId=sqlflow-sc5tv-2448793307&sidePanel=logs:sqlflow-sc5tv-2448793307:main
+    SQLFlow Step: [1/1] Log: http://localhost:9001/workflows/default/sqlflow-kgz8t?tab=workflow&nodeId=sqlflow-kgz8t-3914760474&sidePanel=logs:sqlflow-kgz8t-3914760474:main
     SQLFlow Step: [1/1] Status: Pending
     SQLFlow Step: [1/1] Status: Running
     SQLFlow Step: [1/1] Status: Succeeded
@@ -703,7 +698,7 @@ FROM coco.result;
   <tbody>
     <tr>
       <th>0</th>
-      <td>0.0</td>
+      <td>1</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.718974</td>
@@ -716,7 +711,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>1</th>
-      <td>0.0</td>
+      <td>100004</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.864383</td>
@@ -729,7 +724,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>2</th>
-      <td>0.0</td>
+      <td>100007</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -742,7 +737,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>3</th>
-      <td>0.0</td>
+      <td>100025</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -755,7 +750,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>4</th>
-      <td>0.0</td>
+      <td>100029</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -768,7 +763,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>5</th>
-      <td>0.0</td>
+      <td>100030</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -781,7 +776,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>6</th>
-      <td>0.0</td>
+      <td>100033</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -794,7 +789,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>7</th>
-      <td>0.0</td>
+      <td>100051</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -807,7 +802,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>8</th>
-      <td>0.0</td>
+      <td>100071</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
@@ -820,7 +815,7 @@ FROM coco.result;
     </tr>
     <tr>
       <th>9</th>
-      <td>0.0</td>
+      <td>100100</td>
       <td>0.0</td>
       <td>0.0</td>
       <td>0.000000</td>
