@@ -3,7 +3,6 @@
 # Delete Argo namespace and running PODs on it
 kubectl delete all --all -n argo
 kubectl delete namespaces argo
-
 # Terminate process running on Argo & SQLFlow Notebook
 fuser -k 9001/tcp && fuser -k 8000/tcp
 
@@ -29,3 +28,5 @@ helm install sqlflow charts/sqlflow/
 # Port Forward sqlflow-jupyterhub and sqlflow-server
 nohup kubectl port-forward deployment/sqlflow 50051:50051 --address=0.0.0.0 &
 #nohup kubectl port-forward deployment/sqlflow 8000:8000 --address=0.0.0.0 &
+
+#kubectl get pods --field-selector=status.phase!=Running -o name | xargs kubectl delete
