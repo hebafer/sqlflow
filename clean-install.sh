@@ -10,6 +10,7 @@ fuser -k 9001/tcp && fuser -k 8000/tcp
 kubectl create namespace argo
 kubectl create rolebinding default --clusterrole=admin --serviceaccount=default:default
 kubectl create rolebinding sqlflow --clusterrole=admin --serviceaccount=default:sqlflow --namespace=default
+kubectl create configmap -n argo workflow-controller-configmap --from-literal=config="containerRuntimeExecutor: pns"
 kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo/v2.12.11/manifests/install.yaml
 
 # Expose Argo workflow

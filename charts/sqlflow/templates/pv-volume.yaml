@@ -1,27 +1,4 @@
-### TO CONSIDER LATER ON PRODUCTION ###
-# apiVersion: v1
-# kind: PersistentVolume
-# metadata:
-#   name: sqlflow-pv
-# spec:
-#   capacity:
-#     storage: 10Gi
-#   volumeMode: Filesystem
-#   accessModes:
-#   - ReadOnlyMany
-#   persistentVolumeReclaimPolicy: Retain
-#   storageClassName: local-storage
-#   local:
-#     path: /mnt/data
-#   nodeAffinity:
-#     required:
-#       nodeSelectorTerms:
-#       - matchExpressions:
-#         - key: kubernetes.io/hostname
-#           operator: In
-#           values:
-#           - minikube
-# Run first: minikube mount /data/sqlflow-pv/:/data/sqlflow-pv/
+# On local run first: minikube mount /data/sqlflow-pv/:/data/sqlflow-pv/
 apiVersion: v1
 kind: PersistentVolume
 metadata:

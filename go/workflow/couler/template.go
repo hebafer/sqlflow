@@ -50,6 +50,7 @@ import json
 import re
 import os
 import couler.argo as couler
+from couler.core.templates.volume import Volume, VolumeMount
 datasource = "{{ .DataSource }}"
 step_log_file = None
 if "{{ .StepLogFile }}" != "":
@@ -69,6 +70,12 @@ step_envs = dict()
 {{range $k, $v := .StepEnvs}}
 step_envs["{{$k}}"] = '''"%s"''' % escape_env('''{{$v}}''')
 {{end}}
+
+OVERWRITE_GPU_ENVS = {
+    "NVIDIA_VISIBLE_DEVICES": "all",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,utility"
+}
+step_envs.update(OVERWRITE_GPU_ENVS)
 
 def step_command(sql, step_log_file):
 	if step_log_file:
@@ -100,12 +107,17 @@ resources = None
 if '''{{.Resources}}''' != "":
   resources=json.loads('''{{.Resources}}''')
 
+volume = Volume("sqlflow-pv", "sqlflow-pv-claim")
+volume_mount = VolumeMount("sqlflow-pv", "/datasets")
+couler.add_volume(volume)
+
 {{ range $ss := .SQLStatements }}
 	{{if $ss.IsExtendedSQL }}
 couler.run_container(command=["bash", "-c", step_command('''{{ $ss.OriginalSQL}}''', step_log_file)],
   image="{{ $ss.DockerImage}}",
   env=step_envs,
   secret=sqlflow_secret,
+  volume_mounts=[volume_mount],
   resources=resources)
   {{else if $ss.IsKatibTrain}}
 import couler.sqlflow.katib as auto
