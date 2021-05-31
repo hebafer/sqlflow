@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as base
+FROM ubuntu:20.04 as base
 
 ARG FIND_FASTED_MIRROR=true
 
@@ -7,18 +7,13 @@ ARG FIND_FASTED_MIRROR=true
 COPY docker/dev/find_fastest_resources.sh /usr/local/bin/find_fastest_resources.sh
 
 ENV DEBIAN_FRONTEND=noninteractive
-RUN /bin/bash -c 'if [ "$FIND_FASTED_MIRROR" == "true" ]; then source find_fastest_resources.sh \
-  && echo "Choose the fastest APT source ..." \
-  && choose_fastest_apt_source \
-  && echo "Choose the fastest PIP source ..." \
-  && choose_fastest_pip_source; fi' && \
-  apt-get update && \
-  apt-get -qq install -y --no-install-recommends openjdk-8-jre-headless python3 libmysqlclient20 python3-idna libgomp1 python3-setuptools python3-pip build-essential python3-dev glpk-utils && \
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+RUN apt-get -qq install -y --no-install-recommends openjdk-8-jre-headless python3 libmysqlclient21 python3-idna libgomp1 python3-setuptools python3-pip build-essential python3-dev glpk-utils && \
   ln -sf /usr/share/zoneinfo/Etc/UTC /etc/localtime && \
   apt-get install -y tzdata > /dev/null && \
   dpkg-reconfigure --frontend noninteractive tzdata && \
   ln -s /usr/bin/python3 /usr/bin/python && \
-  ln -s /usr/bin/pip3 /usr/bin/pip && \
+  rm /usr/bin/pip && ln -s /usr/bin/pip3 /usr/bin/pip && \
   pip install --upgrade pip && \
   pip install -U setuptools
 
@@ -43,11 +38,9 @@ RUN wget -q https://sqlflow-models.oss-cn-zhangjiakou.aliyuncs.com/baron-lin64.z
     rm -rf /install/baron-lin64 && \
     rm -rf baron-lin64.zip
 
-ADD build/sqlflow_models-0.1.0-py3-none-any.whl /
 RUN bash -c 'pip install --no-cache-dir --prefix=/install \
-    /sqlflow_models-0.1.0-py3-none-any.whl \
     six==1.15.0 \
-    tensorflow==2.0.1 \
+    tensorflow==2.5.0 \
     mysqlclient==1.4.4 \
     impyla==0.16.0 \
     pyodps==0.8.3 \
@@ -60,9 +53,9 @@ RUN bash -c 'pip install --no-cache-dir --prefix=/install \
     shap==0.30.1 \
     PyUtilib==5.8.0 \
     pyomo==5.6.9 \
-    grpcio==1.28.1'
+    grpcio==1.34.0'
 
-RUN py3clean /install /usr/lib/python3.6
+RUN py3clean /install /usr/lib/python3.8
 
 # Copy last stage's output, mostly python libs, to /usr
 FROM base
