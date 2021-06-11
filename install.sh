@@ -12,7 +12,6 @@ kubectl create namespace argo
 kubectl create rolebinding default --clusterrole=admin --serviceaccount=default:default
 kubectl create rolebinding sqlflow --clusterrole=admin --serviceaccount=default:sqlflow --namespace=default
 kubectl create configmap -n argo workflow-controller-configmap --from-literal=config="containerRuntimeExecutor: pns"
-#kubectl apply -n argo -f https://raw.githubusercontent.com/argoproj/argo/v2.12.11/manifests/install.yaml
 helm install argo-workflows --namespace argo argo/argo-workflows
 # Expose Argo workflow
 while [ "$(kubectl get pods -n argo -o jsonpath='{.items[0].status.containerStatuses[*].ready}')" != "true" ]; do
