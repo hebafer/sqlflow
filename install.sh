@@ -31,9 +31,12 @@ nohup kubectl port-forward deployment/sqlflow 50051:50051 --address=0.0.0.0 &
 kubectl get pods --field-selector=status.phase!=Running -o name | xargs kubectl delete
 
 # Install Grafana and Prometheus to collect metrics
-
 helm repo add stable https://charts.helm.sh/stable
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+kubectl create role prometheus-k8s --namespace argo --resource services,endpoints,pods --verb get,list,watch
+kubectl create rolebinding prometheus-k8s --namespace argo --role prometheus-k8s --serviceaccount stable-kube-prometheus-sta-prometheus
+#kubectl label service argo-workflows-server app=workflow-controller --namespace argo
 
 helm install stable prometheus-community/kube-prometheus-stack
 
