@@ -36,6 +36,12 @@ kubectl get pods --field-selector=status.phase!=Running -o name | xargs kubectl 
 # Install Grafana and Prometheus to collect metrics
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm install prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitor -f prometheus/values.yaml
+
+kubectl delete validatingwebhookconfiguration prometheus-stack-kube-prom-admission
+kubectl delete mutatingwebhookconfiguration prometheus-stack-kube-prom-admission
+
 kubectl create role prometheus-k8s --namespace argo --resource services,endpoints,pods --verb get,list,watch
 kubectl create rolebinding prometheus-k8s --namespace argo --role prometheus-k8s --serviceaccount monitor:prometheus-stack-kube-prom-prometheus
-nohup kubectl port-forward service/stable-grafana 8888:80 &
+kubectl create -f prometheus/workflow-controller-metrics/workflow-controller-metrics-servicemonitor.yaml
+nohup kubectl port-forward -n monitor service/prometheus-stack-grafana 8888:80 &
+nohup kubectl port-forward -n monitor svc/prometheus-operated 9090:9090 --address=0.0.0.0 &
