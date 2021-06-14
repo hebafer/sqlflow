@@ -21,8 +21,6 @@ while [ "$(kubectl get pods -n argo -o jsonpath='{.items[0].status.containerStat
    echo "Waiting for Argo to be ready..."
 done
 # Port Forward argo-server port
-kubectl create role prometheus-k8s --namespace argo --resource services,endpoints,pods --verb get,list,watch
-kubectl create rolebinding prometheus-k8s --namespace argo --role prometheus-k8s --serviceaccount stable-kube-prometheus-sta-prometheus
 kubectl label service argo-server app=workflow-controller --namespace argo
 nohup kubectl -n argo port-forward svc/argo-server 9001:2746 --address=0.0.0.0 &
 
@@ -38,4 +36,6 @@ kubectl get pods --field-selector=status.phase!=Running -o name | xargs kubectl 
 # Install Grafana and Prometheus to collect metrics
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm install prometheus-stack prometheus-community/kube-prometheus-stack --namespace monitor -f prometheus/values.yaml
+kubectl create role prometheus-k8s --namespace argo --resource services,endpoints,pods --verb get,list,watch
+kubectl create rolebinding prometheus-k8s --namespace argo --role prometheus-k8s --serviceaccount monitor:prometheus-stack-kube-prom-prometheus
 nohup kubectl port-forward service/stable-grafana 8888:80 &
