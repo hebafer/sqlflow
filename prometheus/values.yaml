@@ -1,0 +1,16 @@
+kubelet:
+  serviceMonitor:
+    https:
+      false
+prometheus:
+  additionalServiceMonitors:
+    - name: workflow-controller-metrics
+      selector:
+        matchLabels:
+          app : workflow-controller
+      namespaceSelector:
+        matchNames:
+          - argo
+      endpoints:
+        - port: metrics
+          interval: 10s

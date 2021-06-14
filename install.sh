@@ -21,8 +21,8 @@ done
 # Port Forward argo-server port
 kubectl create role prometheus-k8s --namespace argo --resource services,endpoints,pods --verb get,list,watch
 kubectl create rolebinding prometheus-k8s --namespace argo --role prometheus-k8s --serviceaccount stable-kube-prometheus-sta-prometheus
-kubectl label service argo-workflows-server app=workflow-controller --namespace argo
-nohup kubectl -n argo port-forward svc/argo-workflows-server 9001:2746 --address=0.0.0.0 &
+kubectl label service argo-server app=workflow-controller --namespace argo
+nohup kubectl -n argo port-forward svc/argo-server 9001:2746 --address=0.0.0.0 &
 
 # Install SQLFlow chart
 kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
