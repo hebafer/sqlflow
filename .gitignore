@@ -30,3 +30,4 @@ mysql-inited
 .factorypath
 venv/
 *.out
+doc/datasets/popularize_coco_train.sql

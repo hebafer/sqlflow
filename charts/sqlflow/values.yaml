@@ -49,12 +49,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: sqlflow-jupyter.local
+    - host: sqlflow-server
       paths:
       - path: /
         backend:
-          serviceName: sqlflow-jupyter
-          servicePort: 80
+          serviceName: sqlflow-server
+          servicePort: 50051
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -62,11 +62,11 @@ ingress:
 
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 1
+    memory: 512Mi
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 1
+    memory: 512Mi
 
 autoscaling:
   enabled: false
