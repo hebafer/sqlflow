@@ -2,12 +2,14 @@
 
 # Delete Argo namespace and running PODs on it
 kubectl delete all --all -n argo
-kubectl delete namespaces argo
+kubectl delete all --all -n monitor
+kubectl delete namespaces argo monitor
 # Terminate process running on Argo & SQLFlow Notebook
 fuser -k 50051/tcp && fuser -k 9001/tcp && fuser -k 8000/tcp
 
 # Install Argo
 kubectl create namespace argo
+kubectl create namespace monitor
 kubectl create rolebinding default --clusterrole=admin --serviceaccount=default:default
 kubectl create rolebinding sqlflow --clusterrole=admin --serviceaccount=default:sqlflow --namespace=default
 kubectl create configmap -n argo workflow-controller-configmap --from-literal=config="containerRuntimeExecutor: pns"
