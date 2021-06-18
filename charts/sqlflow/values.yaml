@@ -49,12 +49,12 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: sqlflow-server
+    - host: sqlflow-db
       paths:
       - path: /
         backend:
-          serviceName: sqlflow-server
-          servicePort: 50051
+          serviceName: sqlflow-db
+          servicePort: 3306
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
